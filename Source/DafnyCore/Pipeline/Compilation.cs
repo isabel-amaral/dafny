@@ -11,6 +11,7 @@ using System.Reactive;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyCore;
 using Microsoft.Boogie;
 using Microsoft.Dafny.Compilers;
 using Microsoft.Extensions.Logging;
@@ -107,8 +108,14 @@ public class Compilation : IDisposable {
     verificationTickets.Enqueue(Unit.Default);
 
     RootFiles = DetermineRootFiles();
+    MyStopwatch.Start();
     ParsedProgram = ParseAsync();
+    MyStopwatch.Stop();
+    MyStopwatch.SetParsingTime();
+    MyStopwatch.Start();
     Resolution = ResolveAsync();
+    MyStopwatch.Stop();
+    MyStopwatch.IncreaseResolutionTime();
 
     _ = LogExceptions();
   }

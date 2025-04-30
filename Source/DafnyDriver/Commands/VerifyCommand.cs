@@ -65,6 +65,7 @@ public static class VerifyCommand {
 
     var resolution = await compilation.Resolution;
 
+    MyStopwatch.Start();
     if (resolution != null) {
       Subject<CanVerifyResult> verificationResults = new();
 
@@ -77,6 +78,9 @@ public static class VerifyCommand {
       await verificationResultsLogged;
       await proofDependenciesReported;
     }
+    MyStopwatch.Stop();
+    MyStopwatch.SetVerificationTime();
+    MyStopwatch.SaveTimestamps();
 
     return await compilation.GetAndReportExitCode();
   }

@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyCore;
 using Microsoft.Dafny.Compilers;
 
 namespace Microsoft.Dafny;
@@ -67,7 +68,7 @@ public class ProgramResolver {
 
     foreach (var decl in sortedDecls) {
       cancellationToken.ThrowIfCancellationRequested();
-      var moduleResolutionResult = ResolveModuleDeclaration(compilation, decl);
+      var moduleResolutionResult = ResolveModuleDeclaration(compilation, decl); // module pre/post resolve called here
       ProcessDeclarationResolutionResult(moduleDeclarationPointers, decl, moduleResolutionResult);
     }
 
@@ -80,10 +81,17 @@ public class ProgramResolver {
     InstantiateReplaceableModules(Program);
     CheckDuplicateModuleNames(Program);
 
+    MyStopwatch.Stop();
+    MyStopwatch.IncreaseResolutionTime();
+    MyStopwatch.Start();
     foreach (var rewriter in rewriters) {
       cancellationToken.ThrowIfCancellationRequested();
       rewriter.PostResolve(Program);
     }
+    MyStopwatch.Stop();
+    MyStopwatch.IncreasePluginTime();
+    MyStopwatch.Start();
+    
     return Task.CompletedTask;
   }
 

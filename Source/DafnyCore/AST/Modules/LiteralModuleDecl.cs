@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using DafnyCore;
 
 namespace Microsoft.Dafny;
 
@@ -121,11 +122,17 @@ public class LiteralModuleDecl : ModuleDecl, ICanFormat, IHasSymbolChildren {
       var md = module.Implements.Target.ResolveTarget(resolver.reporter);
       module.Implements.Target.SetTarget(md); // If module is not found, md is null and an error message has been emitted
     }
-
+    
     var rewriters = RewriterCollection.GetRewriters(resolver.Reporter, resolver.ProgramResolver.Program);
+    MyStopwatch.Stop();
+    MyStopwatch.IncreaseResolutionTime();
+    MyStopwatch.Start();
     foreach (var rewriter in rewriters) {
       rewriter.PreResolve(module);
     }
+    MyStopwatch.Stop();
+    MyStopwatch.IncreasePluginTime();
+    MyStopwatch.Start();
 
     Signature = module.RegisterTopLevelDecls(resolver, true);
     Signature.Refines = module.Implements?.Target.Sig;
@@ -179,9 +186,15 @@ public class LiteralModuleDecl : ModuleDecl, ICanFormat, IHasSymbolChildren {
     resolver.FillInAdditionalInformation(module);
     FuelAdjustment.CheckForFuelAdjustments(resolver.reporter, module);
 
+    MyStopwatch.Stop();
+    MyStopwatch.IncreaseResolutionTime();
+    MyStopwatch.Start();
     foreach (var rewriter in rewriters) {
       rewriter.PostResolve(module);
     }
+    MyStopwatch.Stop();
+    MyStopwatch.IncreasePluginTime();
+    MyStopwatch.Start();
 
     Type.PopScope(tempVis);
     return sig;
