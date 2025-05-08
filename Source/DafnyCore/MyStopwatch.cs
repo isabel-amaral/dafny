@@ -40,10 +40,8 @@ public static class MyStopwatch {
   }
 
   public static void SaveTimestamps() {
-    using var sw = File.AppendText("elapsed-time.txt");
-    sw.WriteLine("Parsing time " + parsingTime);
-    sw.WriteLine("Plugin time " + pluginTime);
-    sw.WriteLine("Resolution time " + resolutionTime);
-    sw.WriteLine("Verification time " + verificationTime);
+    using var sw = File.AppendText("elapsed-time.csv");
+    sw.WriteLine("parsing_time,plugin_time,resolution_time,verification_time");
+    sw.WriteLine(parsingTime + "," + pluginTime + "," + resolutionTime + "," + verificationTime);
   }
 }
