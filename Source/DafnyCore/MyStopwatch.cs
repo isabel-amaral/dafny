@@ -41,7 +41,8 @@ public static class MyStopwatch {
 
   public static void SaveTimestamps() {
     using var sw = File.AppendText("elapsed-time.csv");
-    sw.WriteLine("parsing_time,plugin_time,resolution_time,verification_time");
-    sw.WriteLine(parsingTime + "," + pluginTime + "," + resolutionTime + "," + verificationTime);
+    sw.WriteLine("parsing_time,plugin_time,resolution_time,verification_time,dafny_time");
+    var dafnyTime = parsingTime + pluginTime + resolutionTime + verificationTime;
+    sw.WriteLine(parsingTime + "," + pluginTime + "," + resolutionTime + "," + verificationTime + "," + dafnyTime);
   }
 }
