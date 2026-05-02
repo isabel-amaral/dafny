@@ -39,6 +39,15 @@ namespace Microsoft.Dafny.Plugins {
     /// <param name="module">The module before resolution</param>
     public virtual void PreResolve(ModuleDefinition module) {
     }
+    
+    /// <summary>
+    /// Override this method to obtain the program before resolution.
+    /// You can then report errors using reporter.Error
+    /// </summary>
+    /// <param name="program">The program before it is resolved</param>
+    public virtual void PreResolve(Program program) {
+      Contract.Requires(program != null);
+    }
 
     /// <summary>
     /// Override this method to obtain the resolved module before the translation pipeline occurs

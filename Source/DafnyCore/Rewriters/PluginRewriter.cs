@@ -18,6 +18,10 @@ class PluginRewriter : IRewriter {
   internal override void PreResolve(ModuleDefinition module) {
     internalRewriter.PreResolve(module);
   }
+  
+  internal override void PreResolve(Program program) {
+    internalRewriter.PreResolve(program);
+  }
 
   internal override void PreVerify(ModuleDefinition module) {
     internalRewriter.PreVerify(module);
