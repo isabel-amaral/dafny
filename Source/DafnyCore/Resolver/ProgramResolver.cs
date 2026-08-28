@@ -61,10 +61,16 @@ public class ProgramResolver {
     var rewriters = RewriterCollection.GetRewriters(Reporter, Program);
 
     var compilation = Program.Compilation;
+    MyStopwatch.Stop();
+    MyStopwatch.IncreaseResolutionTime();
+    MyStopwatch.Start();
     foreach (var rewriter in rewriters) {
       cancellationToken.ThrowIfCancellationRequested();
       rewriter.PreResolve(Program);
     }
+    MyStopwatch.Stop();
+    MyStopwatch.IncreasePluginTime();
+    MyStopwatch.Start();
 
     foreach (var decl in sortedDecls) {
       cancellationToken.ThrowIfCancellationRequested();
